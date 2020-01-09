@@ -20,5 +20,25 @@
     [circleDraggable]="false"
     [editable]="false">
   </agm-circle>
-
 </agm-map>
+
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios">
+  <label class="custom-control-label" for="defaultUnchecked" (click)="ToggleButton(false)">3G</label>
+</div>
+
+<div class="custom-control custom-radio custom-control-inline">
+  <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
+  <label class="custom-control-label" for="defaultChecked" (click)="ToggleButton(true)">4G</label>
+</div>
+
+<div style="text-align:left">
+  <h2>
+       Udaljenost : Razina signala
+  </h2>
+  <ul class="list-group">
+    <li *ngFor="let row of tableData" class="list-group-item">
+      {{ row.distance }} m : {{ row.powerOfSignal }} dBm
+    </li>
+  </ul>
+</div>

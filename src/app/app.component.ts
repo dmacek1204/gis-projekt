@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from './data.service';
+import { Table } from './table.model';
 
 @Component({
   selector: 'app-root',
@@ -17,17 +18,17 @@ export class AppComponent {
   lat = 45.813725;
   lng = 15.975099;
   zoom = 11;
-
+  is4g = true;
   colors = ['#ff0000', '#FF9A00', '#FCFF2B', '#2CFF00', '#0044FF'];
-
+  tableData: Array<Table> = [];
   constructor(private dataService: DataService) {
 
   }
 
   mapClicked($event: any) {
-    console.log($event);
     this.marker = { lat: $event.coords.lat, lng: $event.coords.lng };
-    let data = this.dataService.getClosestBaseStations(this.marker.lat, this.marker.lng, true);
+    const data = this.dataService.getClosestBaseStations(this.marker.lat, this.marker.lng, this.is4g);
+    this.tableData = data;
     this.activeCircles = [];
     let i = 0;
     data.forEach(base => {
@@ -42,11 +43,24 @@ export class AppComponent {
       this.activeCircles.push(circle);
       i++;
     });
-    // this.findClosestBaseStations(this.marker.getPosition().lat(), this.marker.getPosition().lng());
-  }
+ }
 
-  public findClosestBaseStations(lat: number, lng: number) {
-
+  public ToggleButton(is4g: boolean): void {
+    this.is4g = is4g;
+    const data = this.dataService.getClosestBaseStations(this.marker.lat, this.marker.lng, this.is4g);
+    this.tableData = data;
+    this.activeCircles = [];
+    let i = 0;
+    data.forEach(base => {
+      const circle = {
+        lat: +base.lat,
+        lng: +base.lng,
+        radius: +base.range,
+        color: this.colors[i]
+      };
+      this.activeCircles.push(circle);
+      i++;
+    });
   }
 }
 

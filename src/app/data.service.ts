@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseStation } from './base-station.model';
 import { Observable } from 'rxjs';
+import { Table } from './table.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +11,21 @@ export class DataService {
 
   private LteData: Array<BaseStation> = [];
   private UmtsData: Array<BaseStation> = [];
-
   constructor(private http: HttpClient) {
     this.getDataFromJson();
   }
 
-  public getClosestBaseStations(lat?: number, lng?: number, lte?: boolean): Array<BaseStation> {
+  public getClosestBaseStations(lat?: number, lng?: number, lte?: boolean): Array<Table> {
     if (this.LteData.length === 0 || this.UmtsData.length === 0) {
     }
-    let dataArray = new Array<BaseStation>();
+    let dataArray = new Array<Table>();
     if (lte) {
       let increment = 0.00000001;
       while (dataArray.length < 5) {
         this.LteData.forEach(base => {
           if (base.lat < lat + increment && base.lat > lat - increment
             && base.lng < lng + increment && base.lng > lng - increment) {
-            dataArray.push(base);
+            dataArray.push(base as Table);
           }
         });
         if (dataArray.length < 5) {
@@ -39,7 +39,7 @@ export class DataService {
         this.UmtsData.forEach(base => {
           if (base.lat < lat + increment && base.lat > lat - increment
             && base.lng < lng + increment && base.lng > lng - increment) {
-            dataArray.push(base);
+            dataArray.push(base as Table);
           }
         });
         if (dataArray.length > 5) {
@@ -51,7 +51,7 @@ export class DataService {
       }
     }
 
-    let distancesArray = [] as number[];
+    const distancesArray = [] as number[];
 
     dataArray.forEach(base => {
       const R = 6371e3; // metres
@@ -69,15 +69,29 @@ export class DataService {
       distancesArray.push(d);
     });
 
-    let closestBaseStations = new Array<BaseStation>();
+    const closestBaseStations = new Array<Table>();
+    const speedOfLightInAir = 299700000;
+    const frequencyForLTE = 1800000;
+    const frequencyForUMTS = 900000;
+    const switchTodBm = -30;
+    const gainOfReceiver = 3;
 
     for (let i = 0; i < 5; i++) {
-      let min = Math.min(...distancesArray);
-      let index = distancesArray.indexOf(min);
-      distancesArray.splice(index, 1);
-      closestBaseStations.push(dataArray[index]);
-    }
+      const min = Math.min(...distancesArray); // udaljenost
+      const index = distancesArray.indexOf(min);  // dataArray[index]
+      const gainOfTransmitter = dataArray[index].power;
 
+      if (lte) {
+        dataArray[index].powerOfSignal = gainOfReceiver + gainOfTransmitter +
+                                            2 * 10 * Math.log((speedOfLightInAir / frequencyForLTE) / ( 4 * Math.PI * min )) + switchTodBm;
+      } else {
+        dataArray[index].powerOfSignal = gainOfReceiver + gainOfTransmitter +
+                                            2 * 10 * Math.log((speedOfLightInAir / frequencyForUMTS) / ( 4 * Math.PI * min )) + switchTodBm;
+      }
+      dataArray[index].distance = min;
+      distancesArray.splice(index, 1);
+      closestBaseStations.push(dataArray[index] as Table);
+    }
     console.log(closestBaseStations);
     return closestBaseStations;
   }
