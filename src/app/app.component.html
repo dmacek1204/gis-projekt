@@ -23,15 +23,19 @@
     </div>
 
     <div class="col-sm-4">
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios">
-        <label class="custom-control-label" for="defaultUnchecked" (click)="ToggleButton(false)">3G</label>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-primary btn-lg" [ngClass]="{'active': is4g}" (click)="ToggleButton(true)">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked>4G
+          </label>
+          <label class="btn btn-success btn-lg" [ngClass]="{'active': !is4g}" (click)="ToggleButton(false)">
+            <input name="options" id="option2" autocomplete="off" type="radio">3G
+          </label>
       </div>
 
-      <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
-        <label class="custom-control-label" for="defaultChecked" (click)="ToggleButton(true)">4G</label>
-      </div>
+      <div class="form-group">
+        &nbsp;
+    </div>
+
       <div style="text-align:left">
         <table class="table">
           <thead>
