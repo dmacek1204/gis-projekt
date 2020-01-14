@@ -91,6 +91,7 @@ export class DataService {
       dataArray[index].distance = min;
       distancesArray.splice(index, 1);
       closestBaseStations.push(dataArray[index] as Table);
+      dataArray.splice(index, 1);
     }
     console.log(closestBaseStations);
     return closestBaseStations;
@@ -111,7 +112,6 @@ export class DataService {
         }
       });
     });
-    // console.log(this.UmtsData);
   }
 
   public getJSON(): Observable<any> {

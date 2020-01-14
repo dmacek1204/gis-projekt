@@ -1,44 +1,53 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-</div>
-<agm-map #map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="true" [zoomControl]="true"
-  (mapClick)="mapClicked($event)">
+<div class="container">
+  <div style="text-align:center">
+    <h1>
+      Welcome to {{ title }}!
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <agm-map #map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="true" [zoomControl]="true"
+        (mapClick)="mapClicked($event)">
 
-  <agm-marker [latitude]="marker.lat" [longitude]="marker.lng">
+        <agm-marker [latitude]="marker.lat" [longitude]="marker.lng">
 
-  </agm-marker>
+        </agm-marker>
 
-  <agm-circle 
-    *ngFor="let circle of activeCircles;"
-    [latitude]="circle.lat" 
-    [longitude]="circle.lng" 
-    [radius]="circle.radius" 
-    [fillColor]="circle.color" 
-    [circleDraggable]="false"
-    [editable]="false">
-  </agm-circle>
-</agm-map>
+        <agm-circle *ngFor="let circle of activeCircles;" [latitude]="circle.lat" [longitude]="circle.lng"
+          [radius]="circle.radius" [fillColor]="circle.color" [circleDraggable]="false" [editable]="false">
+        </agm-circle>
+      </agm-map>
 
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios">
-  <label class="custom-control-label" for="defaultUnchecked" (click)="ToggleButton(false)">3G</label>
-</div>
 
-<div class="custom-control custom-radio custom-control-inline">
-  <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
-  <label class="custom-control-label" for="defaultChecked" (click)="ToggleButton(true)">4G</label>
-</div>
+    </div>
 
-<div style="text-align:left">
-  <h2>
-       Udaljenost : Razina signala
-  </h2>
-  <ul class="list-group">
-    <li *ngFor="let row of tableData" class="list-group-item">
-      {{ row.distance }} m : {{ row.powerOfSignal }} dBm
-    </li>
-  </ul>
+    <div class="col-sm-4">
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios">
+        <label class="custom-control-label" for="defaultUnchecked" (click)="ToggleButton(false)">3G</label>
+      </div>
+
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" checked>
+        <label class="custom-control-label" for="defaultChecked" (click)="ToggleButton(true)">4G</label>
+      </div>
+      <div style="text-align:left">
+        <table class="table">
+          <thead>
+
+            <th scope="col">#</th>
+            <th scope="col">Udaljenost</th>
+            <th scope="col">Razina signala</th>
+          </thead>
+          <tr *ngFor="let row of tableData; let i = index">
+            <th scope="row">{{i}}</th>
+            <td>{{row.distance}} m</td>
+            <td>{{row.powerOfSignal}} dBm</td>
+
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>

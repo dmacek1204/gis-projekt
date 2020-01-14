@@ -28,12 +28,11 @@ export class AppComponent {
   mapClicked($event: any) {
     this.marker = { lat: $event.coords.lat, lng: $event.coords.lng };
     const data = this.dataService.getClosestBaseStations(this.marker.lat, this.marker.lng, this.is4g);
+    data.sort((base1, base2) => base2.powerOfSignal - base1.powerOfSignal);
     this.tableData = data;
     this.activeCircles = [];
     let i = 0;
     data.forEach(base => {
-      // let color = Math.floor(0x1000000 * Math.random()).toString(16);
-      // color = '#' + ('000000' + color).slice(-6);
       const circle = {
         lat: +base.lat,
         lng: +base.lng,
